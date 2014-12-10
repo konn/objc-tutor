@@ -1,0 +1,5 @@
+*_objc.[hm]
+.DS_Store
+*.hi
+*.o
+dist
