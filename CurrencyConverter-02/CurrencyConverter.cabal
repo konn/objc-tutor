@@ -23,7 +23,8 @@ Executable CurrencyConverter
                        language-c-inline,
                        language-c-quote,
                        sodium,
-                       template-haskell
+                       template-haskell,
+                       transformers
   hs-source-dirs:      src
   ghc-options:         -framework Cocoa -optl-ObjC -threaded -fllvm
   cc-options:          -fobjc-arc
