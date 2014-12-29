@@ -6,19 +6,6 @@ import Language.C.Quote.ObjC
 
 objc_import ["<Cocoa/Cocoa.h>"]
 
-objcMain :: IO ()
-objcMain = $(objc [] $ void [cexp| NSApplicationMain(0, NULL) |])
-
-objc_interface [cunit|
-@interface AppDelegate : NSObject <NSApplicationDelegate>
-@property (weak) typename NSTextField *dollarsField;
-@property (weak) typename NSTextField *rateField;
-@property (weak) typename NSTextField *resultField;
-
-- (void)convert:(id)sender;
-@end
- |]
-
 newtype NSTextField = NSTextField (ForeignPtr NSTextField)
                       deriving (Typeable)
 
@@ -32,6 +19,16 @@ newtype AppDelegate = AppDelegate (ForeignPtr AppDelegate)
 
 marshalAppDel :: AppDelegate -> IO AppDelegate
 marshalAppDel = return
+
+objc_interface [cunit|
+@interface AppDelegate : NSObject <NSApplicationDelegate>
+@property (weak) typename NSTextField *dollarsField;
+@property (weak) typename NSTextField *rateField;
+@property (weak) typename NSTextField *resultField;
+
+- (void)convert:(id)sender;
+@end
+ |]
 
 objc_marshaller 'marshalAppDel 'marshalAppDel
 
@@ -75,9 +72,12 @@ objc_implementation [Typed 'convert] [cunit|
 @end
 |]
 
+nsApplicationMain :: IO ()
+nsApplicationMain = $(objc [] $ void [cexp| NSApplicationMain(0, NULL) |])
+
 objc_emit
 
 main :: IO ()
 main = do
   objc_initialise
-  objcMain
+  nsApplicationMain
